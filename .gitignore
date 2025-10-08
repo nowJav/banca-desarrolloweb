@@ -1,0 +1,11 @@
+ # Environment files
+ #.env
+ #.env.local
+ #.env.*.local
+ 
+ # Vendor dependencies
+ # /vendor/
+ 
+ # Composer lock file (optional for libs)
+ # composer.lock
+ 
