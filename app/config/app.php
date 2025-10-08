@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Config;
+namespace App\config;
 
 class App
 {
@@ -42,4 +42,3 @@ class App
         }
     }
 }
-

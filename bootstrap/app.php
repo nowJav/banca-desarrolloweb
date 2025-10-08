@@ -13,19 +13,21 @@ $dotenv->safeLoad();
 // Initialize base app settings (timezone, locale)
 \App\Config\App::init();
 
-// Optionally start session based on env
+// Setup DB-backed session handler and start session
 $sessionName = $_ENV['SESSION_NAME'] ?? $_SERVER['SESSION_NAME'] ?? null;
-if ($sessionName) {
-    if (session_status() === PHP_SESSION_NONE) {
-        session_name($sessionName);
-        if (isset($_ENV['SESSION_LIFETIME'])) {
-            ini_set('session.gc_maxlifetime', (string) $_ENV['SESSION_LIFETIME']);
-        }
-        session_start();
-    }
+if ($sessionName && session_status() === PHP_SESSION_NONE) {
+    session_name($sessionName);
+}
+if (isset($_ENV['SESSION_LIFETIME'])) {
+    ini_set('session.gc_maxlifetime', (string) $_ENV['SESSION_LIFETIME']);
+}
+
+$handler = new \App\Core\DbSessionHandler();
+session_set_save_handler($handler, true);
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
 return [
     'routes' => \App\Config\Routes::all(),
 ];
-
