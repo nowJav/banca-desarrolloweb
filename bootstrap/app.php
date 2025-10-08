@@ -11,7 +11,7 @@ $dotenv = Dotenv::createImmutable($rootPath);
 $dotenv->safeLoad();
 
 // Initialize base app settings (timezone, locale)
-\App\Config\App::init();
+\App\config\App::init();
 
 // Setup DB-backed session handler and start session
 $sessionName = $_ENV['SESSION_NAME'] ?? $_SERVER['SESSION_NAME'] ?? null;
@@ -22,12 +22,13 @@ if (isset($_ENV['SESSION_LIFETIME'])) {
     ini_set('session.gc_maxlifetime', (string) $_ENV['SESSION_LIFETIME']);
 }
 
-$handler = new \App\Core\DbSessionHandler();
+$handler = new \App\core\DbSessionHandler();
 session_set_save_handler($handler, true);
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 return [
-    'routes' => \App\Config\Routes::all(),
+    'routes' => \App\config\Routes::all(),
 ];
+

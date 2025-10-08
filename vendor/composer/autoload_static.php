@@ -103,6 +103,19 @@ class ComposerStaticInitb1f94e9358bfd8e3e8ebdfd9482fa57c
     );
 
     public static $classMap = array (
+        'App\\config\\App' => __DIR__ . '/../..' . '/app/config/App.php',
+        'App\\config\\Database' => __DIR__ . '/../..' . '/app/config/Database.php',
+        'App\\config\\Routes' => __DIR__ . '/../..' . '/app/config/Routes.php',
+        'App\\core\\Auth' => __DIR__ . '/../..' . '/app/core/Auth.php',
+        'App\\core\\Controller' => __DIR__ . '/../..' . '/app/core/Controller.php',
+        'App\\core\\Csrf' => __DIR__ . '/../..' . '/app/core/Csrf.php',
+        'App\\core\\DbSessionHandler' => __DIR__ . '/../..' . '/app/core/DbSessionHandler.php',
+        'App\\core\\Model' => __DIR__ . '/../..' . '/app/core/Model.php',
+        'App\\core\\Router' => __DIR__ . '/../..' . '/app/core/Router.php',
+        'App\\middlewares\\Admin' => __DIR__ . '/../..' . '/app/middlewares/Admin.php',
+        'App\\middlewares\\Cajero' => __DIR__ . '/../..' . '/app/middlewares/Cajero.php',
+        'App\\middlewares\\Cliente' => __DIR__ . '/../..' . '/app/middlewares/Cliente.php',
+        'App\\middlewares\\RoleGuard' => __DIR__ . '/../..' . '/app/middlewares/RoleGuard.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Brick\\Math\\BigDecimal' => __DIR__ . '/..' . '/brick/math/src/BigDecimal.php',
         'Brick\\Math\\BigInteger' => __DIR__ . '/..' . '/brick/math/src/BigInteger.php',

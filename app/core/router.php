@@ -70,7 +70,6 @@ class Router
             if (method_exists($instance, 'handle')) {
                 $ok = $instance->handle();
                 if ($ok !== true) {
-                    // Middleware may already have redirected; ensure fallback redirect
                     if (!headers_sent()) {
                         header('Location: /login', true, 302);
                     }
@@ -83,7 +82,6 @@ class Router
 
     private function resolveMiddlewareClass(string $mw): ?string
     {
-        // Allow short names
         $map = [
             'admin' => 'App\\middlewares\\Admin',
             'cajero' => 'App\\middlewares\\Cajero',
@@ -92,11 +90,10 @@ class Router
         if (isset($map[strtolower($mw)])) {
             return $map[strtolower($mw)];
         }
-        // If it's a FQCN, return as-is
         if (str_contains($mw, '\\')) {
             return $mw;
         }
-        // Try default namespace
-        return 'App\\Middlewares\\' . $mw;
+        return 'App\\middlewares\\' . $mw;
     }
 }
+

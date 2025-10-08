@@ -33,3 +33,4 @@ class Csrf
         return $valid;
     }
 }
+

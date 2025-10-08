@@ -15,3 +15,4 @@ abstract class Model
         $this->db = Database::getConnection();
     }
 }
+

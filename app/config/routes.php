@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Config;
+namespace App\config;
 
 class Routes
 {
@@ -21,22 +21,22 @@ class Routes
             ['method' => 'POST', 'path' => '/registro',            'handler' => 'RegistroController@register'],
 
             // Panel admin
-            ['method' => 'GET',  'path' => '/admin',               'handler' => 'AdminController@index'],
-            ['method' => 'GET',  'path' => '/admin/cajeros',       'handler' => 'AdminController@cajeros'],
-            ['method' => 'GET',  'path' => '/admin/cuentas',       'handler' => 'AdminController@cuentas'],
+            ['method' => 'GET',  'path' => '/admin',               'handler' => 'AdminController@index',   'middleware' => 'admin'],
+            ['method' => 'GET',  'path' => '/admin/cajeros',       'handler' => 'AdminController@cajeros', 'middleware' => 'admin'],
+            ['method' => 'GET',  'path' => '/admin/cuentas',       'handler' => 'AdminController@cuentas', 'middleware' => 'admin'],
 
             // Panel cajero
-            ['method' => 'GET',  'path' => '/cajero/crear-cuenta', 'handler' => 'CajeroController@showCrearCuenta'],
-            ['method' => 'POST', 'path' => '/cajero/crear-cuenta', 'handler' => 'CajeroController@crearCuenta'],
-            ['method' => 'GET',  'path' => '/cajero/deposito',     'handler' => 'CajeroController@showDeposito'],
-            ['method' => 'POST', 'path' => '/cajero/deposito',     'handler' => 'CajeroController@deposito'],
-            ['method' => 'GET',  'path' => '/cajero/retiro',       'handler' => 'CajeroController@showRetiro'],
-            ['method' => 'POST', 'path' => '/cajero/retiro',       'handler' => 'CajeroController@retiro'],
+            ['method' => 'GET',  'path' => '/cajero/crear-cuenta', 'handler' => 'CajeroController@showCrearCuenta', 'middleware' => 'cajero'],
+            ['method' => 'POST', 'path' => '/cajero/crear-cuenta', 'handler' => 'CajeroController@crearCuenta',     'middleware' => 'cajero'],
+            ['method' => 'GET',  'path' => '/cajero/deposito',     'handler' => 'CajeroController@showDeposito',    'middleware' => 'cajero'],
+            ['method' => 'POST', 'path' => '/cajero/deposito',     'handler' => 'CajeroController@deposito',        'middleware' => 'cajero'],
+            ['method' => 'GET',  'path' => '/cajero/retiro',       'handler' => 'CajeroController@showRetiro',      'middleware' => 'cajero'],
+            ['method' => 'POST', 'path' => '/cajero/retiro',       'handler' => 'CajeroController@retiro',          'middleware' => 'cajero'],
 
             // Panel cliente
-            ['method' => 'GET',  'path' => '/cliente/terceros',    'handler' => 'ClienteController@terceros'],
-            ['method' => 'POST', 'path' => '/cliente/transferir',  'handler' => 'ClienteController@transferir'],
-            ['method' => 'GET',  'path' => '/cliente/estado-cuenta','handler' => 'ClienteController@estadoCuenta'],
+            ['method' => 'GET',  'path' => '/cliente/terceros',    'handler' => 'ClienteController@terceros',      'middleware' => 'cliente'],
+            ['method' => 'POST', 'path' => '/cliente/transferir',  'handler' => 'ClienteController@transferir',    'middleware' => 'cliente'],
+            ['method' => 'GET',  'path' => '/cliente/estado-cuenta','handler' => 'ClienteController@estadoCuenta', 'middleware' => 'cliente'],
         ];
     }
 }
