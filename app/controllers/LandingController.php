@@ -5,13 +5,13 @@ namespace App\Controllers;
 
 use App\core\Controller;
 
-class HomeController extends Controller
+class LandingController extends Controller
 {
     // GET /
-    // SP: no aplica (landing estática)
+    // SP: no aplica (landing)
     public function index(): void
     {
-        $this->render('home/index');
+        $this->render('landing/index');
     }
 }
 
