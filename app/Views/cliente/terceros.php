@@ -27,7 +27,18 @@
   <table class="table table-striped">
     <thead><tr><th>Nombre</th><th>Documento</th><th>Banco</th><th>Cuenta</th></tr></thead>
     <tbody>
-      <tr><td colspan="4" class="text-center">Sin datos</td></tr>
+      <?php if (!empty($terceros ?? [])): ?>
+        <?php foreach ($terceros as $t): ?>
+          <tr>
+            <td><?= htmlspecialchars((string)$t['nombre']) ?></td>
+            <td><?= htmlspecialchars((string)$t['documento']) ?></td>
+            <td><?= htmlspecialchars((string)$t['banco']) ?></td>
+            <td><?= htmlspecialchars((string)$t['cuenta']) ?></td>
+          </tr>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <tr><td colspan="4" class="text-center">Sin datos</td></tr>
+      <?php endif; ?>
     </tbody>
   </table>
 </div>

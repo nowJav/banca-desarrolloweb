@@ -19,7 +19,18 @@
   <table class="table table-striped">
     <thead><tr><th>Fecha</th><th>Tipo</th><th>Monto</th><th>Descripción</th></tr></thead>
     <tbody>
-      <tr><td colspan="4" class="text-center">Sin datos</td></tr>
+      <?php if (!empty($movimientos ?? [])): ?>
+        <?php foreach ($movimientos as $m): ?>
+          <tr>
+            <td><?= htmlspecialchars((string)($m['fecha'] ?? $m['creado_en'] ?? '')) ?></td>
+            <td><?= htmlspecialchars((string)($m['tipo'] ?? '')) ?></td>
+            <td><?= htmlspecialchars((string)($m['monto'] ?? '')) ?></td>
+            <td><?= htmlspecialchars((string)($m['descripcion'] ?? '')) ?></td>
+          </tr>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <tr><td colspan="4" class="text-center">Sin datos</td></tr>
+      <?php endif; ?>
     </tbody>
   </table>
 </div>

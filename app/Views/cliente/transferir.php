@@ -7,6 +7,9 @@
     <label class="form-label">Tercero</label>
     <select class="form-select" name="tercero_id" required>
       <option value="">Seleccione...</option>
+      <?php foreach (($terceros ?? []) as $t): ?>
+        <option value="<?= (int)$t['id'] ?>"><?= htmlspecialchars((string)$t['nombre']) ?> (<?= htmlspecialchars((string)$t['cuenta']) ?>)</option>
+      <?php endforeach; ?>
     </select>
   </div>
   <div class="col-md-6">

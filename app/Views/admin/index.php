@@ -1,16 +1,17 @@
 <?php // vista vacía admin dashboard ?>
+<?php $k = $kpis ?? []; ?>
 <div class="row mb-4">
   <div class="col-md-3">
-    <div class="card text-bg-light"><div class="card-body"><h6 class="mb-1">Total clientes</h6><div class="fs-4" id="kpi_clientes">--</div></div></div>
+    <div class="card text-bg-light"><div class="card-body"><h6 class="mb-1">Total clientes</h6><div class="fs-4" id="kpi_clientes"><?= htmlspecialchars((string)($k['total_clientes'] ?? '--')) ?></div></div></div>
   </div>
   <div class="col-md-3">
-    <div class="card text-bg-light"><div class="card-body"><h6 class="mb-1">Cuentas activas</h6><div class="fs-4" id="kpi_cuentas">--</div></div></div>
+    <div class="card text-bg-light"><div class="card-body"><h6 class="mb-1">Cuentas activas</h6><div class="fs-4" id="kpi_cuentas"><?= htmlspecialchars((string)($k['cuentas_activas'] ?? '--')) ?></div></div></div>
   </div>
   <div class="col-md-3">
-    <div class="card text-bg-light"><div class="card-body"><h6 class="mb-1">Depósitos hoy</h6><div class="fs-4" id="kpi_depositos">--</div></div></div>
+    <div class="card text-bg-light"><div class="card-body"><h6 class="mb-1">Depósitos hoy</h6><div class="fs-4" id="kpi_depositos"><?= htmlspecialchars((string)($k['depositos_hoy'] ?? '--')) ?></div></div></div>
   </div>
   <div class="col-md-3">
-    <div class="card text-bg-light"><div class="card-body"><h6 class="mb-1">Retiros hoy</h6><div class="fs-4" id="kpi_retiros">--</div></div></div>
+    <div class="card text-bg-light"><div class="card-body"><h6 class="mb-1">Retiros hoy</h6><div class="fs-4" id="kpi_retiros"><?= htmlspecialchars((string)($k['retiros_hoy'] ?? '--')) ?></div></div></div>
   </div>
 </div>
 <div class="card">

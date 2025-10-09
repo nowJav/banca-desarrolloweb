@@ -24,6 +24,8 @@ class Routes
             ['method' => 'GET',  'path' => '/admin',               'handler' => 'AdminController@index',   'middleware' => 'admin'],
             ['method' => 'GET',  'path' => '/admin/cajeros',       'handler' => 'AdminController@cajeros', 'middleware' => 'admin'],
             ['method' => 'GET',  'path' => '/admin/cuentas',       'handler' => 'AdminController@cuentas', 'middleware' => 'admin'],
+            ['method' => 'POST', 'path' => '/admin/cuentas/bloquear',    'handler' => 'AdminController@bloquearCuenta',   'middleware' => 'admin'],
+            ['method' => 'POST', 'path' => '/admin/cuentas/desbloquear', 'handler' => 'AdminController@desbloquearCuenta','middleware' => 'admin'],
 
             // Panel cajero
             ['method' => 'GET',  'path' => '/cajero/crear-cuenta', 'handler' => 'CajeroController@showCrearCuenta', 'middleware' => 'cajero'],
@@ -35,9 +37,10 @@ class Routes
 
             // Panel cliente
             ['method' => 'GET',  'path' => '/cliente/terceros',    'handler' => 'ClienteController@terceros',      'middleware' => 'cliente'],
+            ['method' => 'POST', 'path' => '/cliente/terceros',    'handler' => 'ClienteController@agregarTercero','middleware' => 'cliente'],
+            ['method' => 'GET',  'path' => '/cliente/transferir',  'handler' => 'ClienteController@showTransferir', 'middleware' => 'cliente'],
             ['method' => 'POST', 'path' => '/cliente/transferir',  'handler' => 'ClienteController@transferir',    'middleware' => 'cliente'],
             ['method' => 'GET',  'path' => '/cliente/estado-cuenta','handler' => 'ClienteController@estadoCuenta', 'middleware' => 'cliente'],
         ];
     }
 }
-

@@ -32,6 +32,20 @@ use App\core\Auth;
   </nav>
 
   <main class="container">
+    <?php
+    if (session_status() !== PHP_SESSION_ACTIVE) { session_start(); }
+    $flash = $_SESSION['_flash'] ?? [];
+    if (!empty($flash)) {
+        foreach (['success' => 'success', 'error' => 'danger', 'warning' => 'warning', 'info' => 'info'] as $k => $bs) {
+            if (!empty($flash[$k])) {
+                echo '<div class="alert alert-' . $bs . ' alert-dismissible fade show" role="alert">'
+                    . htmlspecialchars((string)$flash[$k])
+                    . '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+            }
+        }
+        unset($_SESSION['_flash']);
+    }
+    ?>
     <?php if (isset($content) && is_callable($content)) { $content(); } ?>
   </main>
 
