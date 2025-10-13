@@ -26,12 +26,13 @@ class RegistroController extends Controller
             return;
         }
 
-        $nombre = trim((string)($_POST['nombre'] ?? ''));
+        $numeroCuenta = trim((string)($_POST['numero_cuenta'] ?? ''));
+        $dpi = trim((string)($_POST['dpi'] ?? ''));
         $email = trim((string)($_POST['email'] ?? ''));
         $password = (string)($_POST['password'] ?? '');
         $password2 = (string)($_POST['password_confirmation'] ?? '');
 
-        if (!Validator::required($nombre) || !Validator::required($email) || !Validator::required($password)) {
+        if (!Validator::required($numeroCuenta) || !Validator::required($dpi) || !Validator::required($email) || !Validator::required($password)) {
             $this->setFlash('error', 'Todos los campos son obligatorios.');
             header('Location: /registro');
             return;
@@ -46,8 +47,13 @@ class RegistroController extends Controller
             header('Location: /registro');
             return;
         }
-        if (!Validator::stringLen($nombre, 2, 140)) {
-            $this->setFlash('error', 'Nombre fuera de longitud permitida.');
+        if (!Validator::stringLen($numeroCuenta, 6, 24)) {
+            $this->setFlash('error', 'Número de cuenta inválido.');
+            header('Location: /registro');
+            return;
+        }
+        if (!Validator::digits($dpi, 6, 25)) {
+            $this->setFlash('error', 'DPI inválido.');
             header('Location: /registro');
             return;
         }
@@ -59,7 +65,7 @@ class RegistroController extends Controller
 
         $usuarioModel = new Usuario();
         $passwordHash = Auth::hashPassword($password);
-        $res = $usuarioModel->registrarCliente($nombre, $email, $passwordHash);
+        $res = $usuarioModel->registrarCliente($numeroCuenta, $dpi, $email, $passwordHash);
 
         if ($res['ok'] ?? false) {
             (new AuditoriaService())->registrar('registro_cliente', 'usuario', $res['id'] ?? null);
@@ -72,4 +78,3 @@ class RegistroController extends Controller
         header('Location: /registro');
     }
 }
-

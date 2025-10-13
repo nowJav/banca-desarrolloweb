@@ -13,8 +13,15 @@ class AuthController extends Controller
     // GET /login
     public function showLogin(): void
     {
-        $this->render('auth/login');
+        $this->render('auth/login', ['roleLabel' => null]);
     }
+
+    // GET /login/admin
+    public function showLoginAdmin(): void { $this->render('auth/login', ['roleLabel' => 'Admin']); }
+    // GET /login/cajero
+    public function showLoginCajero(): void { $this->render('auth/login', ['roleLabel' => 'Cajero']); }
+    // GET /login/cliente
+    public function showLoginCliente(): void { $this->render('auth/login', ['roleLabel' => 'Cliente']); }
 
     // POST /login
     public function login(): void
@@ -78,4 +85,3 @@ class AuthController extends Controller
         exit;
     }
 }
-

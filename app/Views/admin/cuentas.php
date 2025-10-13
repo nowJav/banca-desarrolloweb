@@ -2,7 +2,6 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h1 class="h4">Cuentas</h1>
   <a href="/cajero/crear-cuenta" class="btn btn-primary">Crear cuenta</a>
-  
 </div>
 <div class="table-responsive">
   <table class="table table-striped align-middle">
@@ -29,12 +28,12 @@
             </td>
             <td>
               <div class="d-flex gap-2">
-                <form action="/admin/cuentas/bloquear" method="post" onsubmit="return confirm('¿Bloquear esta cuenta?');">
+                <form action="/admin/cuentas/bloquear" method="post" data-confirm="¿Bloquear esta cuenta?">
                   <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>">
                   <input type="hidden" name="cuenta_id" value="<?= (int)($c['id'] ?? 0) ?>">
                   <button class="btn btn-sm btn-outline-warning" type="submit">Bloquear</button>
                 </form>
-                <form action="/admin/cuentas/desbloquear" method="post" onsubmit="return confirm('¿Desbloquear esta cuenta?');">
+                <form action="/admin/cuentas/desbloquear" method="post" data-confirm="¿Desbloquear esta cuenta?">
                   <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>">
                   <input type="hidden" name="cuenta_id" value="<?= (int)($c['id'] ?? 0) ?>">
                   <button class="btn btn-sm btn-outline-success" type="submit">Desbloquear</button>

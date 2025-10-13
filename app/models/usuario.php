@@ -9,12 +9,13 @@ use PDOException;
 
 class Usuario extends Model
 {
-    public function registrarCliente(string $nombre, string $email, string $passwordHash): array
+    public function registrarCliente(string $numeroCuenta, string $dpi, string $email, string $passwordHash): array
     {
         try {
-            $stmt = $this->db->prepare('CALL sp_registrar_usuario_cliente(:nombre, :email, :password_hash)');
+            $stmt = $this->db->prepare('CALL sp_registrar_usuario_cliente(:numero_cuenta, :dpi, :email, :password_hash)');
             $stmt->execute([
-                ':nombre' => $nombre,
+                ':numero_cuenta' => $numeroCuenta,
+                ':dpi' => $dpi,
                 ':email' => $email,
                 ':password_hash' => $passwordHash,
             ]);

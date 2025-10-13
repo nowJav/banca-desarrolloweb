@@ -13,6 +13,9 @@ class Routes
 
             // Autenticación
             ['method' => 'GET',  'path' => '/login',               'handler' => 'AuthController@showLogin'],
+            ['method' => 'GET',  'path' => '/login/admin',         'handler' => 'AuthController@showLoginAdmin'],
+            ['method' => 'GET',  'path' => '/login/cajero',        'handler' => 'AuthController@showLoginCajero'],
+            ['method' => 'GET',  'path' => '/login/cliente',       'handler' => 'AuthController@showLoginCliente'],
             ['method' => 'POST', 'path' => '/login',               'handler' => 'AuthController@login'],
             ['method' => 'POST', 'path' => '/logout',              'handler' => 'AuthController@logout'],
 
