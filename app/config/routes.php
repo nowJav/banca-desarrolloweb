@@ -26,6 +26,8 @@ class Routes
             // Panel admin
             ['method' => 'GET',  'path' => '/admin',               'handler' => 'AdminController@index',   'middleware' => 'admin'],
             ['method' => 'GET',  'path' => '/admin/cajeros',       'handler' => 'AdminController@cajeros', 'middleware' => 'admin'],
+            ['method' => 'POST', 'path' => '/admin/cajeros',       'handler' => 'AdminController@crearCajero', 'middleware' => 'admin'],
+            ['method' => 'POST', 'path' => '/admin/cajeros/toggle','handler' => 'AdminController@toggleCajero', 'middleware' => 'admin'],
             ['method' => 'GET',  'path' => '/admin/cuentas',       'handler' => 'AdminController@cuentas', 'middleware' => 'admin'],
             ['method' => 'POST', 'path' => '/admin/cuentas/bloquear',    'handler' => 'AdminController@bloquearCuenta',   'middleware' => 'admin'],
             ['method' => 'POST', 'path' => '/admin/cuentas/desbloquear', 'handler' => 'AdminController@desbloquearCuenta','middleware' => 'admin'],
@@ -47,3 +49,5 @@ class Routes
         ];
     }
 }
+            // API
+            ['method' => 'GET',  'path' => '/api/kpi-series',     'handler' => 'ApiController@kpiSeries'],
