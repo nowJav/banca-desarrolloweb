@@ -90,6 +90,60 @@ class AdminController extends Controller
         header('Location: /admin/cuentas');
     }
 
+    // GET /admin/auditoria
+    public function auditoria(): void
+    {
+        $db = \App\config\Database::getConnection();
+        $desde = isset($_GET['desde']) && $_GET['desde'] !== '' ? (string)$_GET['desde'] : null;
+        $hasta = isset($_GET['hasta']) && $_GET['hasta'] !== '' ? (string)$_GET['hasta'] : null;
+        $entidad = isset($_GET['entidad']) && $_GET['entidad'] !== '' ? (string)$_GET['entidad'] : null;
+        $usuarioId = isset($_GET['usuario_id']) && $_GET['usuario_id'] !== '' ? (int)$_GET['usuario_id'] : null;
+        $ip = isset($_GET['ip']) && $_GET['ip'] !== '' ? (string)$_GET['ip'] : null;
+        $page = max(1, (int)($_GET['page'] ?? 1));
+        $perPage = max(1, min(100, (int)($_GET['perPage'] ?? 50)));
+
+        // Usuarios para select
+        $users = $db->query('SELECT id, email FROM usuarios ORDER BY email ASC')->fetchAll(\PDO::FETCH_ASSOC) ?: [];
+
+        // Build query
+        $where = [];$params=[];
+        if ($desde) { $where[] = 'a.creado_at >= :desde'; $params[':desde'] = $desde.' 00:00:00'; }
+        if ($hasta) { $where[] = 'a.creado_at <= :hasta'; $params[':hasta'] = $hasta.' 23:59:59'; }
+        if ($entidad) { $where[] = 'a.entidad = :entidad'; $params[':entidad'] = $entidad; }
+        if ($usuarioId) { $where[] = 'a.usuario_id = :uid'; $params[':uid'] = $usuarioId; }
+        if ($ip) { $where[] = 'a.ip = :ip'; $params[':ip'] = $ip; }
+        $wsql = empty($where) ? '' : (' WHERE ' . implode(' AND ', $where));
+
+        // Count
+        $stmt = $db->prepare('SELECT COUNT(*) FROM auditoria_eventos a'.$wsql);
+        $stmt->execute($params);
+        $total = (int)($stmt->fetchColumn() ?: 0);
+        // Page
+        $offset = ($page - 1) * $perPage;
+        $sql = 'SELECT a.creado_at, u.email as usuario, a.entidad, a.entidad_id, a.accion, a.ip, a.datos_previos, a.datos_nuevos
+                FROM auditoria_eventos a LEFT JOIN usuarios u ON u.id=a.usuario_id'
+                . $wsql . ' ORDER BY a.creado_at DESC LIMIT :lim OFFSET :off';
+        $stmt = $db->prepare($sql);
+        foreach ($params as $k=>$v) { $stmt->bindValue($k, $v); }
+        $stmt->bindValue(':lim', $perPage, \PDO::PARAM_INT);
+        $stmt->bindValue(':off', $offset, \PDO::PARAM_INT);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
+
+        $this->render('admin/auditoria', [
+            'rows' => $rows,
+            'users' => $users,
+            'desde' => $desde,
+            'hasta' => $hasta,
+            'entidad' => $entidad,
+            'usuario_id' => $usuarioId,
+            'ip' => $ip,
+            'page' => $page,
+            'perPage' => $perPage,
+            'total' => $total,
+        ]);
+    }
+
     // POST /admin/cajeros (crear)
     public function crearCajero(): void
     {

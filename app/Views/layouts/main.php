@@ -37,6 +37,7 @@ use App\core\Auth;
             <li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
             <li class="nav-item"><a class="nav-link" href="/admin/cajeros">Cajeros</a></li>
             <li class="nav-item"><a class="nav-link" href="/admin/cuentas">Cuentas</a></li>
+            <li class="nav-item"><a class="nav-link" href="/admin/auditoria">Auditoría</a></li>
           <?php endif; ?>
           <?php if ($isCajero): ?>
             <li class="nav-item"><a class="nav-link" href="/cajero/crear-cuenta">Crear cuenta</a></li>

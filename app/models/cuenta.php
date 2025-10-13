@@ -9,6 +9,25 @@ use PDOException;
 
 class Cuenta extends Model
 {
+    public function crearCuentaCajero(string $numeroCuenta, string $dpi, string $nombre, float $montoInicial, int $cajeroId): array
+    {
+        try {
+            $stmt = $this->db->prepare('CALL sp_crear_cuenta(:numero, :dpi, :nombre, :monto, :cajero_id)');
+            $stmt->execute([
+                ':numero' => $numeroCuenta,
+                ':dpi' => $dpi,
+                ':nombre' => $nombre,
+                ':monto' => $montoInicial,
+                ':cajero_id' => $cajeroId,
+            ]);
+            // SP no necesariamente retorna fila, asumimos exito si no hay excepcion
+            while ($stmt->nextRowset()) { /* flush */ }
+            return ['ok' => true, 'message' => 'Cuenta creada', 'numero_cuenta' => $numeroCuenta];
+        } catch (PDOException $e) {
+            error_log('crearCuentaCajero error: ' . $e->getMessage());
+            return ['ok' => false, 'message' => 'Error del servidor'];
+        }
+    }
     public function crearCuenta(int $clienteId, string $tipo, float $saldoInicial): array
     {
         try {
@@ -96,5 +115,13 @@ class Cuenta extends Model
         $stmt->execute([':id' => $cuentaId]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return (string)($row['numero_cuenta'] ?? '');
+    }
+
+    public function saldoPorNumero(string $numeroCuenta): ?float
+    {
+        $stmt = $this->db->prepare('SELECT saldo FROM cuentas WHERE numero_cuenta = :num');
+        $stmt->execute([':num' => $numeroCuenta]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return isset($row['saldo']) ? (float)$row['saldo'] : null;
     }
 }
