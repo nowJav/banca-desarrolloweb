@@ -18,7 +18,7 @@ class Auth
 
     public function login(string $email, string $password): bool
     {
-        $stmt = $this->db->prepare('SELECT id, email, pass_hash AS password_hash, role_id FROM usuarios WHERE email = :email LIMIT 1');
+        $stmt = $this->db->prepare('SELECT u.id, u.email, u.pass_hash AS password_hash, u.role_id, r.nombre AS role_name FROM usuarios u LEFT JOIN roles r ON r.id = u.role_id WHERE u.email = :email LIMIT 1');
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -29,7 +29,9 @@ class Auth
 
         $_SESSION['user_id'] = (int)$user['id'];
         $_SESSION['user_email'] = (string)$user['email'];
-        $_SESSION['user_role'] = isset($user['role_id']) ? (string)$user['role_id'] : ($_SESSION['user_role'] ?? null);
+        $_SESSION['user_role'] = isset($user['role_name']) && $user['role_name'] !== null
+            ? (string)$user['role_name']
+            : (isset($user['role_id']) ? (string)$user['role_id'] : ($_SESSION['user_role'] ?? null));
 
         $this->attachUserToSession((int)$user['id']);
         $this->audit('login', 'session', session_id() ?: null, ['ok' => true]);
@@ -66,7 +68,12 @@ class Auth
     public function authorize(string ...$roles): bool
     {
         $role = $this->role();
-        return $role !== null && in_array($role, $roles, true);
+        if ($role === null) return false;
+        // Aceptar tanto nombre como id en string
+        $map = ['1' => 'admin', '2' => 'cajero', '3' => 'cliente'];
+        $normalized = strtolower($role);
+        if (isset($map[$normalized])) { $normalized = $map[$normalized]; }
+        return in_array($normalized, array_map('strtolower', $roles), true);
     }
 
     public static function hashPassword(string $password): string
@@ -101,4 +108,3 @@ class Auth
         ]);
     }
 }
-
