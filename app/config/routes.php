@@ -54,8 +54,8 @@ class Routes
 
             // API extra
             ['method' => 'GET',  'path' => '/api/tercero-resumen', 'handler' => 'ApiController@terceroResumen'],
+            ['method' => 'GET',  'path' => '/api/kpi-series',      'handler' => 'ApiController@kpiSeries'],
         ];
     }
 }
-            // API
-            ['method' => 'GET',  'path' => '/api/kpi-series',     'handler' => 'ApiController@kpiSeries'],
+ 
