@@ -27,5 +27,19 @@ class ApiController extends Controller
         $row = $stmt->fetch(\PDO::FETCH_ASSOC) ?: ['depositos'=>0,'retiros'=>0];
         echo json_encode(['depositos' => (int)$row['depositos'], 'retiros' => (int)$row['retiros']]);
     }
-}
 
+    public function terceroResumen(): void
+    {
+        header('Content-Type: application/json');
+        $uid = (int)($_SESSION['user_id'] ?? 0);
+        $tid = isset($_GET['tercero_id']) ? (int)$_GET['tercero_id'] : 0;
+        if ($uid <= 0 || $tid <= 0) { echo json_encode(['conteo'=>0,'monto'=>0]); return; }
+        $db = \App\config\Database::getConnection();
+        // Verificar ownership y traer resumen
+        $sql = 'SELECT tr.conteo, tr.monto_acumulado FROM terceros_resumen_diario tr JOIN terceros t ON t.id=tr.tercero_id WHERE t.usuario_owner_id=:uid AND tr.tercero_id=:tid AND tr.fecha=DATE(NOW()) LIMIT 1';
+        $stmt = $db->prepare($sql);
+        $stmt->execute([':uid'=>$uid, ':tid'=>$tid]);
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC) ?: ['conteo'=>0,'monto_acumulado'=>0];
+        echo json_encode(['conteo'=>(int)($row['conteo'] ?? 0), 'monto'=>(float)($row['monto_acumulado'] ?? 0)]);
+    }
+}

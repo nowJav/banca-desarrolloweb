@@ -9,21 +9,23 @@ use PDOException;
 
 class Transferencia extends Model
 {
-    public function transferir(int $clienteId, int $terceroId, float $monto, ?string $descripcion = null): array
+    public function transferir(int $usuarioId, string $numeroCuentaOrigen, string $numeroCuentaDestino, float $monto): array
     {
         try {
-            $stmt = $this->db->prepare('CALL sp_transferir(:cliente_id, :tercero_id, :monto, :descripcion)');
+            // Usar variable de usuario para OUT param
+            $this->db->query("SET @out_tx = NULL");
+            $stmt = $this->db->prepare('CALL sp_transferir(:uid, :origen, :destino, :monto, @out_tx)');
             $stmt->execute([
-                ':cliente_id' => $clienteId,
-                ':tercero_id' => $terceroId,
+                ':uid' => $usuarioId,
+                ':origen' => $numeroCuentaOrigen,
+                ':destino' => $numeroCuentaDestino,
                 ':monto' => $monto,
-                ':descripcion' => $descripcion,
             ]);
-            $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
-            $ok = (bool)($row['ok'] ?? $row['success'] ?? $row['estado'] ?? ($row ? true : false));
-            $message = (string)($row['message'] ?? $row['mensaje'] ?? ($ok ? 'Transferencia realizada' : 'Error en transferencia'));
+            // Recuperar OUT
+            $tx = null;
+            foreach ($this->db->query('SELECT @out_tx AS id_tx') as $row) { $tx = $row['id_tx'] ?? null; }
             while ($stmt->nextRowset()) { /* flush */ }
-            return ['ok' => $ok, 'message' => $message];
+            return ['ok' => true, 'message' => 'Transferencia realizada', 'id_tx' => $tx];
         } catch (PDOException $e) {
             error_log('transferir error: ' . $e->getMessage());
             return ['ok' => false, 'message' => 'Error del servidor'];

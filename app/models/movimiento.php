@@ -41,11 +41,13 @@ class Movimiento extends Model
         }
     }
 
-    public function estadoCuenta(int $clienteId, ?string $desde = null, ?string $hasta = null): array
+    public function estadoCuentaPorNumero(string $numeroCuenta, ?string $desde = null, ?string $hasta = null): array
     {
         try {
-            $stmt = $this->db->prepare('CALL sp_listado_estado_cuenta(:cliente_id, :desde, :hasta)');
-            $stmt->bindValue(':cliente_id', $clienteId, PDO::PARAM_INT);
+            $desde = $desde ? ($desde . ' 00:00:00') : date('Y-m-d 00:00:00');
+            $hasta = $hasta ? ($hasta . ' 23:59:59') : date('Y-m-d 23:59:59');
+            $stmt = $this->db->prepare('CALL sp_listado_estado_cuenta(:numero, :desde, :hasta)');
+            $stmt->bindValue(':numero', $numeroCuenta);
             $stmt->bindValue(':desde', $desde);
             $stmt->bindValue(':hasta', $hasta);
             $stmt->execute();

@@ -44,11 +44,16 @@ class Routes
             ['method' => 'GET',  'path' => '/cajero/movimientos',  'handler' => 'CajeroController@showMovimientos', 'middleware' => 'cajero'],
 
             // Panel cliente
+            ['method' => 'GET',  'path' => '/cliente',             'handler' => 'ClienteController@index',         'middleware' => 'cliente'],
             ['method' => 'GET',  'path' => '/cliente/terceros',    'handler' => 'ClienteController@terceros',      'middleware' => 'cliente'],
             ['method' => 'POST', 'path' => '/cliente/terceros',    'handler' => 'ClienteController@agregarTercero','middleware' => 'cliente'],
+            ['method' => 'POST', 'path' => '/cliente/terceros/toggle', 'handler' => 'ClienteController@toggleTercero','middleware' => 'cliente'],
             ['method' => 'GET',  'path' => '/cliente/transferir',  'handler' => 'ClienteController@showTransferir', 'middleware' => 'cliente'],
             ['method' => 'POST', 'path' => '/cliente/transferir',  'handler' => 'ClienteController@transferir',    'middleware' => 'cliente'],
             ['method' => 'GET',  'path' => '/cliente/estado-cuenta','handler' => 'ClienteController@estadoCuenta', 'middleware' => 'cliente'],
+
+            // API extra
+            ['method' => 'GET',  'path' => '/api/tercero-resumen', 'handler' => 'ApiController@terceroResumen'],
         ];
     }
 }
