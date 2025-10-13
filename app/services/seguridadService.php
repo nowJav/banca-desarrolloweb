@@ -21,16 +21,24 @@ class SeguridadService
         $windowSeconds = (int)($_ENV['LOGIN_RATE_WINDOW'] ?? 900); // 15 min
         $maxAttempts   = (int)($_ENV['LOGIN_RATE_MAX'] ?? 5);
 
+        // Compute window start timestamp because MySQL doesn't allow binding inside INTERVAL
+        $since = date('Y-m-d H:i:s', time() - $windowSeconds);
         $sql = 'SELECT COUNT(*) AS fail_count
                 FROM intentos_login
                 WHERE usuario_email = :email
-                  AND (ip = :ip OR :ip IS NULL)
                   AND exito = 0
-                  AND creado_at > (NOW() - INTERVAL :win SECOND)';
+                  AND creado_at > :since
+                  AND (:ip1 IS NULL OR ip = :ip2)';
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':email', $email);
-        $stmt->bindValue(':ip', $ip);
-        $stmt->bindValue(':win', $windowSeconds, PDO::PARAM_INT);
+        if ($ip === null) {
+            $stmt->bindValue(':ip1', null, PDO::PARAM_NULL);
+            $stmt->bindValue(':ip2', null, PDO::PARAM_NULL);
+        } else {
+            $stmt->bindValue(':ip1', $ip);
+            $stmt->bindValue(':ip2', $ip);
+        }
+        $stmt->bindValue(':since', $since);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: ['fail_count' => 0];
         return ((int)$row['fail_count']) >= $maxAttempts;
