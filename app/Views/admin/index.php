@@ -20,3 +20,21 @@
     <canvas id="kpiChart" height="120"></canvas>
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+  (function(){
+    const ctx = document.getElementById('kpiChart');
+    if (!ctx) return;
+    const data = {
+      labels: ['Depósitos', 'Retiros'],
+      datasets: [{
+        label: 'Operaciones hoy',
+        data: [Number(document.getElementById('kpi_depositos')?.textContent || 0), Number(document.getElementById('kpi_retiros')?.textContent || 0)],
+        backgroundColor: ['rgba(25,135,84,.5)','rgba(220,53,69,.5)'],
+        borderColor: ['#198754','#dc3545'],
+        borderWidth: 1
+      }]
+    };
+    new Chart(ctx, { type: 'bar', data, options: { scales: { y: { beginAtZero: true }}}});
+  })();
+</script>

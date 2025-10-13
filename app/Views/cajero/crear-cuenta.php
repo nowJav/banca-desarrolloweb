@@ -4,7 +4,8 @@
   <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($token) ?>">
   <div class="col-md-6">
     <label class="form-label">Cliente ID</label>
-    <input type="number" class="form-control" name="cliente_id" required>
+    <input type="number" class="form-control" name="cliente_id" required min="1" step="1">
+    <div class="form-text">ID numérico del cliente.</div>
   </div>
   <div class="col-md-6">
     <label class="form-label">Tipo de cuenta</label>
@@ -15,7 +16,8 @@
   </div>
   <div class="col-md-6">
     <label class="form-label">Saldo inicial</label>
-    <input type="number" step="0.01" class="form-control" name="saldo_inicial" required>
+    <input type="number" step="0.01" min="0" class="form-control" name="saldo_inicial" required>
+    <div class="form-text">Mínimo 0.00</div>
   </div>
   <div class="col-12">
     <button class="btn btn-success" type="submit">Crear</button>

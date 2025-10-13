@@ -18,11 +18,23 @@ use App\core\Auth;
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
+        <?php
+          $role = $_SESSION['user_role'] ?? null;
+          $isAdmin  = ($role === 'admin' || $role === 1 || $role === '1');
+          $isCajero = ($role === 'cajero' || $role === 2 || $role === '2');
+          $isCliente= ($role === 'cliente' || $role === 3 || $role === '3');
+        ?>
         <ul class="navbar-nav me-auto">
           <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
-          <li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
-          <li class="nav-item"><a class="nav-link" href="/cajero/crear-cuenta">Cajero</a></li>
-          <li class="nav-item"><a class="nav-link" href="/cliente/terceros">Cliente</a></li>
+          <?php if ($isAdmin): ?>
+            <li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
+          <?php endif; ?>
+          <?php if ($isCajero): ?>
+            <li class="nav-item"><a class="nav-link" href="/cajero/crear-cuenta">Cajero</a></li>
+          <?php endif; ?>
+          <?php if ($isCliente): ?>
+            <li class="nav-item"><a class="nav-link" href="/cliente/terceros">Cliente</a></li>
+          <?php endif; ?>
         </ul>
         <ul class="navbar-nav">
           <?php if (!empty($_SESSION['user_id'])): ?>

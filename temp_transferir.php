@@ -1,6 +1,7 @@
+﻿<?php // vista vacÃ­a transferir (cliente) ?>
 <?php $token = \App\core\Csrf::token('cliente_transferir'); ?>
 <h1 class="h4 mb-3">Transferir</h1>
-<form action="/cliente/transferir" method="post" class="row g-3" novalidate>
+<form action="/cliente/transferir" method="post" class="row g-3">
   <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($token) ?>">
   <div class="col-md-6">
     <label class="form-label">Tercero</label>
@@ -13,12 +14,11 @@
   </div>
   <div class="col-md-6">
     <label class="form-label">Monto</label>
-    <input type="number" step="0.01" min="0.01" class="form-control" name="monto" required>
-    <div class="form-text">Mínimo 0.01</div>
+    <input type="number" step="0.01" class="form-control" name="monto" required>
   </div>
   <div class="col-12">
-    <label class="form-label">Descripción</label>
-    <input type="text" class="form-control" name="descripcion" maxlength="200" placeholder="Opcional">
+    <label class="form-label">DescripciÃ³n</label>
+    <input type="text" class="form-control" name="descripcion">
   </div>
   <div class="col-12">
     <button class="btn btn-success" type="submit">Transferir</button>
