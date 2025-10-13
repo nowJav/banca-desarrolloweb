@@ -1,7 +1,7 @@
 -- Admin y cajero (hashes de ejemplo; reemplaza por reales en app)
 INSERT INTO usuarios (email, pass_hash, role_id, activo) VALUES
-('admin@demo.com',  '$2y$10$.tPHYuSCiCYclwXor2lgqOTpKPtPPV8Fx577RNTny1xLS2t5JFPCe', 1, TRUE),
-('cajero@demo.com', '$2y$10$.tPHYuSCiCYclwXor2lgqOTpKPtPPV8Fx577RNTny1xLS2t5JFPCe', 2, TRUE);
+('admin@demo.com',  '$2y$10$FXd4ph6EiPKyOpFowHBTR.sjYZGjrQMtagR5uMFHqWCQgmH7sgxLW', 1, TRUE),
+('cajero@demo.com', '$2y$10$FXd4ph6EiPKyOpFowHBTR.sjYZGjrQMtagR5uMFHqWCQgmH7sgxLW', 2, TRUE);
 INSERT INTO cajeros (usuario_id, nombre, activo)
 SELECT id, 'Cajero Demo', TRUE FROM usuarios WHERE email='cajero@demo.com';
 
@@ -27,7 +27,7 @@ FROM cuentas c WHERE c.numero_cuenta='110-000-0002';
 -- Registrar usuario cliente para cuenta 0001 (vincula email a cuenta)
 -- (Normalmente lo haría sp_registrar_usuario_cliente; aquí directo por seed)
 INSERT INTO usuarios (email, pass_hash, role_id, activo)
-VALUES ('ana@demo.com', '$2y$10$.tPHYuSCiCYclwXor2lgqOTpKPtPPV8Fx577RNTny1xLS2t5JFPCe', 3, TRUE);
+VALUES ('ana@demo.com', '$2y$10$FXd4ph6EiPKyOpFowHBTR.sjYZGjrQMtagR5uMFHqWCQgmH7sgxLW', 3, TRUE);
 UPDATE clientes SET usuario_id=(SELECT id FROM usuarios WHERE email='ana@demo.com')
 WHERE dpi='1000000000101';
 
