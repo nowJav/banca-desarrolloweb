@@ -25,7 +25,8 @@ class Transferencia extends Model
             while ($stmt->nextRowset()) { /* flush */ }
             return ['ok' => $ok, 'message' => $message];
         } catch (PDOException $e) {
-            return ['ok' => false, 'message' => $e->getMessage()];
+            error_log('transferir error: ' . $e->getMessage());
+            return ['ok' => false, 'message' => 'Error del servidor'];
         }
     }
 }

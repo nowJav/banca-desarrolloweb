@@ -8,18 +8,15 @@ use App\core\Csrf;
 use App\core\Auth;
 use App\models\Usuario;
 use App\services\AuditoriaService;
+use App\helpers\Validator;
 
 class RegistroController extends Controller
 {
-    // GET /registro
-    // SP: no aplica (muestra formulario)
     public function showForm(): void
     {
         $this->render('registro/form');
     }
 
-    // POST /registro
-    // SP: sp_registrar_usuario_cliente
     public function register(): void
     {
         $token = (string)($_POST['csrf_token'] ?? '');
@@ -34,7 +31,7 @@ class RegistroController extends Controller
         $password = (string)($_POST['password'] ?? '');
         $password2 = (string)($_POST['password_confirmation'] ?? '');
 
-        if ($nombre === '' || $email === '' || $password === '') {
+        if (!Validator::required($nombre) || !Validator::required($email) || !Validator::required($password)) {
             $this->setFlash('error', 'Todos los campos son obligatorios.');
             header('Location: /registro');
             return;
@@ -44,19 +41,35 @@ class RegistroController extends Controller
             header('Location: /registro');
             return;
         }
+        if (!Validator::email($email)) {
+            $this->setFlash('error', 'Formato de correo inválido.');
+            header('Location: /registro');
+            return;
+        }
+        if (!Validator::stringLen($nombre, 2, 140)) {
+            $this->setFlash('error', 'Nombre fuera de longitud permitida.');
+            header('Location: /registro');
+            return;
+        }
+        if (!Validator::stringLen($password, 8, 255)) {
+            $this->setFlash('error', 'La contraseña debe tener al menos 8 caracteres.');
+            header('Location: /registro');
+            return;
+        }
 
         $usuarioModel = new Usuario();
         $passwordHash = Auth::hashPassword($password);
         $res = $usuarioModel->registrarCliente($nombre, $email, $passwordHash);
 
         if ($res['ok'] ?? false) {
-            (new AuditoriaService())->registrar('registro_cliente', 'Registro de cliente', 'usuario', $res['id'] ?? null);
+            (new AuditoriaService())->registrar('registro_cliente', 'usuario', $res['id'] ?? null);
             $this->setFlash('success', $res['message'] ?? 'Registro exitoso.');
             header('Location: /login');
             return;
         }
 
-        $this->setFlash('error', $res['message'] ?? 'No fue posible registrar.');
+        $this->setFlash('error', 'No fue posible registrar.');
         header('Location: /registro');
     }
 }
+

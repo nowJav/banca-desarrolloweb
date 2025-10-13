@@ -24,6 +24,22 @@ if (isset($_ENV['SESSION_LIFETIME'])) {
 
 $handler = new \App\core\DbSessionHandler();
 session_set_save_handler($handler, true);
+
+// Secure cookie params
+$cookieLifetime = (int)($_ENV['SESSION_LIFETIME'] ?? $_SERVER['SESSION_LIFETIME'] ?? 1440);
+$isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_ENV['FORCE_SECURE_COOKIES'] ?? 'false') === 'true');
+$sameSite = (string)($_ENV['SESSION_SAMESITE'] ?? 'Lax');
+
+// PHP >= 7.3 supports array options
+session_set_cookie_params([
+    'lifetime' => $cookieLifetime,
+    'path' => '/',
+    'domain' => '',
+    'secure' => $isSecure,
+    'httponly' => true,
+    'samesite' => in_array($sameSite, ['Lax','Strict','None'], true) ? $sameSite : 'Lax',
+]);
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -31,4 +47,3 @@ if (session_status() === PHP_SESSION_NONE) {
 return [
     'routes' => \App\config\Routes::all(),
 ];
-

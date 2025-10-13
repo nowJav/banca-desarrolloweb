@@ -25,7 +25,8 @@ class Cuenta extends Model
             while ($stmt->nextRowset()) { /* flush */ }
             return ['ok' => $ok, 'message' => $message, 'id' => $id];
         } catch (PDOException $e) {
-            return ['ok' => false, 'message' => $e->getMessage()];
+            error_log('crearCuenta error: ' . $e->getMessage());
+            return ['ok' => false, 'message' => 'Error del servidor'];
         }
     }
 
@@ -40,7 +41,8 @@ class Cuenta extends Model
             while ($stmt->nextRowset()) { /* flush */ }
             return ['ok' => $ok, 'message' => $message];
         } catch (PDOException $e) {
-            return ['ok' => false, 'message' => $e->getMessage()];
+            error_log('bloquearCuenta error: ' . $e->getMessage());
+            return ['ok' => false, 'message' => 'Error del servidor'];
         }
     }
 
@@ -55,7 +57,8 @@ class Cuenta extends Model
             while ($stmt->nextRowset()) { /* flush */ }
             return ['ok' => $ok, 'message' => $message];
         } catch (PDOException $e) {
-            return ['ok' => false, 'message' => $e->getMessage()];
+            error_log('desbloquearCuenta error: ' . $e->getMessage());
+            return ['ok' => false, 'message' => 'Error del servidor'];
         }
     }
 }

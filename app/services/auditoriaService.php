@@ -15,20 +15,19 @@ class AuditoriaService
         $this->db = Database::getConnection();
     }
 
-    public function registrar(string $tipo, string $descripcion, ?string $entidad = null, $entidadId = null): void
+    public function registrar(string $accion, string $entidad, $entidadId, array $datosNuevos = []): void
     {
         $usuarioId = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : null;
         $ip = $_SERVER['REMOTE_ADDR'] ?? null;
-        $ua = $_SERVER['HTTP_USER_AGENT'] ?? null;
-        $stmt = $this->db->prepare('INSERT INTO auditoria_eventos (tipo, descripcion, usuario_id, entidad, entidad_id, ip, user_agent, creado_en) VALUES (:tipo, :descripcion, :usuario_id, :entidad, :entidad_id, :ip, :ua, NOW())');
+        $stmt = $this->db->prepare('INSERT INTO auditoria_eventos (usuario_id, entidad, entidad_id, accion, datos_previos, datos_nuevos, ip, creado_at) VALUES (:usuario_id, :entidad, :entidad_id, :accion, :prev, :nuevos, :ip, NOW())');
         $stmt->execute([
-            ':tipo' => $tipo,
-            ':descripcion' => $descripcion,
             ':usuario_id' => $usuarioId,
             ':entidad' => $entidad,
-            ':entidad_id' => $entidadId,
+            ':entidad_id' => (string)$entidadId,
+            ':accion' => $accion,
+            ':prev' => null,
+            ':nuevos' => json_encode($datosNuevos, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
             ':ip' => $ip,
-            ':ua' => $ua,
         ]);
     }
 }

@@ -26,7 +26,8 @@ class Tercero extends Model
             while ($stmt->nextRowset()) { /* flush */ }
             return ['ok' => $ok, 'message' => $message];
         } catch (PDOException $e) {
-            return ['ok' => false, 'message' => $e->getMessage()];
+            error_log('tercero.agregar error: ' . $e->getMessage());
+            return ['ok' => false, 'message' => 'Error del servidor'];
         }
     }
 

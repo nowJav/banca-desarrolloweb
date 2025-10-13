@@ -9,11 +9,10 @@ use App\models\Tercero;
 use App\models\Transferencia;
 use App\models\Movimiento;
 use App\services\AuditoriaService;
+use App\helpers\Validator;
 
 class ClienteController extends Controller
 {
-    // GET /cliente/terceros
-    // SP: sp_listar_terceros
     public function terceros(): void
     {
         $clienteId = $_SESSION['user_id'] ?? null;
@@ -24,7 +23,6 @@ class ClienteController extends Controller
         $this->render('cliente/terceros', ['terceros' => $terceros]);
     }
 
-    // GET /cliente/transferir
     public function showTransferir(): void
     {
         $clienteId = $_SESSION['user_id'] ?? null;
@@ -35,8 +33,6 @@ class ClienteController extends Controller
         $this->render('cliente/transferir', ['terceros' => $terceros]);
     }
 
-    // POST /cliente/terceros
-    // SP: sp_agregar_tercero
     public function agregarTercero(): void
     {
         $token = (string)($_POST['csrf_token'] ?? '');
@@ -50,23 +46,21 @@ class ClienteController extends Controller
         $documento = trim((string)($_POST['documento'] ?? ''));
         $banco = trim((string)($_POST['banco'] ?? ''));
         $cuenta = trim((string)($_POST['cuenta'] ?? ''));
-        if ($clienteId <= 0 || $nombre === '' || $documento === '' || $banco === '' || $cuenta === '') {
+        if ($clienteId <= 0 || !Validator::stringLen($nombre, 2, 80) || !Validator::stringLen($banco, 2, 60) || !Validator::stringLen($cuenta, 4, 30) || !Validator::digits($documento, 6, 25)) {
             $this->setFlash('error', 'Completa todos los campos.');
             header('Location: /cliente/terceros');
             return;
         }
         $res = (new Tercero())->agregar($clienteId, $nombre, $documento, $banco, $cuenta);
         if ($res['ok'] ?? false) {
-            (new AuditoriaService())->registrar('agregar_tercero', 'Alta de tercero', 'tercero', null);
+            (new AuditoriaService())->registrar('agregar_tercero', 'tercero', null);
             $this->setFlash('success', $res['message'] ?? 'Tercero agregado.');
         } else {
-            $this->setFlash('error', $res['message'] ?? 'No se pudo agregar.');
+            $this->setFlash('error', 'No se pudo agregar.');
         }
         header('Location: /cliente/terceros');
     }
 
-    // POST /cliente/transferir
-    // SP: sp_transferir
     public function transferir(): void
     {
         $token = (string)($_POST['csrf_token'] ?? '');
@@ -79,24 +73,21 @@ class ClienteController extends Controller
         $terceroId = (int)($_POST['tercero_id'] ?? 0);
         $monto = (float)($_POST['monto'] ?? 0);
         $descripcion = trim((string)($_POST['descripcion'] ?? ''));
-        if ($clienteId <= 0 || $terceroId <= 0 || $monto <= 0) {
+        if ($clienteId <= 0 || $terceroId <= 0 || !Validator::positiveNumber($monto) || !Validator::maxNumber($monto, 1000000000)) {
             $this->setFlash('error', 'Datos inválidos para transferir.');
             header('Location: /cliente/transferir');
             return;
         }
         $res = (new Transferencia())->transferir($clienteId, $terceroId, $monto, $descripcion ?: null);
         if ($res['ok'] ?? false) {
-            (new AuditoriaService())->registrar('transferir', 'Transferencia a tercero', 'tercero', $terceroId);
+            (new AuditoriaService())->registrar('transferir', 'tercero', $terceroId);
             $this->setFlash('success', $res['message'] ?? 'Transferencia realizada.');
         } else {
-            $msg = $res['message'] ?? 'No se pudo transferir.';
-            $this->setFlash('error', $msg);
+            $this->setFlash('error', 'No se pudo transferir.');
         }
         header('Location: /cliente/transferir');
     }
 
-    // GET /cliente/estado-cuenta
-    // SP: sp_listado_estado_cuenta
     public function estadoCuenta(): void
     {
         $clienteId = (int)($_SESSION['user_id'] ?? 0);
@@ -109,3 +100,4 @@ class ClienteController extends Controller
         $this->render('cliente/estado-cuenta', ['movimientos' => $movs, 'desde' => $desde, 'hasta' => $hasta]);
     }
 }
+

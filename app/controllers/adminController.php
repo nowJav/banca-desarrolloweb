@@ -11,30 +11,22 @@ use App\services\AuditoriaService;
 
 class AdminController extends Controller
 {
-    // GET /admin
-    // SP: sp_kpis_dia
     public function index(): void
     {
         $kpis = (new KpiService())->kpisDia();
         $this->render('admin/index', ['kpis' => $kpis]);
     }
 
-    // GET /admin/cajeros
-    // SP: sp_listar_cajeros
     public function cajeros(): void
     {
         $this->render('admin/cajeros');
     }
 
-    // GET /admin/cuentas
-    // SP: sp_listar_cuentas
     public function cuentas(): void
     {
         $this->render('admin/cuentas');
     }
 
-    // POST /admin/cuentas/bloquear
-    // SP: sp_bloquear_cuenta
     public function bloquearCuenta(): void
     {
         $token = (string)($_POST['csrf_token'] ?? '');
@@ -47,16 +39,14 @@ class AdminController extends Controller
         if ($cuentaId <= 0) { $this->setFlash('error', 'Cuenta inválida.'); header('Location: /admin/cuentas'); return; }
         $res = (new Cuenta())->bloquearCuenta($cuentaId);
         if ($res['ok'] ?? false) {
-            (new AuditoriaService())->registrar('bloquear_cuenta', 'Bloqueo de cuenta', 'cuenta', $cuentaId);
+            (new AuditoriaService())->registrar('bloquear_cuenta', 'cuenta', $cuentaId);
             $this->setFlash('success', $res['message'] ?? 'Cuenta bloqueada.');
         } else {
-            $this->setFlash('error', $res['message'] ?? 'No se pudo bloquear.');
+            $this->setFlash('error', 'No se pudo bloquear.');
         }
         header('Location: /admin/cuentas');
     }
 
-    // POST /admin/cuentas/desbloquear
-    // SP: sp_desbloquear_cuenta
     public function desbloquearCuenta(): void
     {
         $token = (string)($_POST['csrf_token'] ?? '');
@@ -69,11 +59,12 @@ class AdminController extends Controller
         if ($cuentaId <= 0) { $this->setFlash('error', 'Cuenta inválida.'); header('Location: /admin/cuentas'); return; }
         $res = (new Cuenta())->desbloquearCuenta($cuentaId);
         if ($res['ok'] ?? false) {
-            (new AuditoriaService())->registrar('desbloquear_cuenta', 'Desbloqueo de cuenta', 'cuenta', $cuentaId);
+            (new AuditoriaService())->registrar('desbloquear_cuenta', 'cuenta', $cuentaId);
             $this->setFlash('success', $res['message'] ?? 'Cuenta desbloqueada.');
         } else {
-            $this->setFlash('error', $res['message'] ?? 'No se pudo desbloquear.');
+            $this->setFlash('error', 'No se pudo desbloquear.');
         }
         header('Location: /admin/cuentas');
     }
 }
+

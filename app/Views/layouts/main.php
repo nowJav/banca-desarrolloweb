@@ -25,7 +25,17 @@ use App\core\Auth;
           <li class="nav-item"><a class="nav-link" href="/cliente/terceros">Cliente</a></li>
         </ul>
         <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+          <?php if (!empty($_SESSION['user_id'])): ?>
+            <li class="nav-item">
+              <form action="/logout" method="post" class="d-inline">
+                <?php $logoutToken = \App\core\Csrf::token('logout'); ?>
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($logoutToken) ?>">
+                <button class="btn btn-sm btn-outline-light" type="submit">Salir</button>
+              </form>
+            </li>
+          <?php else: ?>
+            <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+          <?php endif; ?>
         </ul>
       </div>
     </div>

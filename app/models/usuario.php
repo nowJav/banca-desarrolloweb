@@ -28,7 +28,8 @@ class Usuario extends Model
             while ($stmt->nextRowset()) { /* flush */ }
             return ['ok' => $ok, 'message' => $message, 'id' => $id];
         } catch (PDOException $e) {
-            return ['ok' => false, 'message' => $e->getMessage()];
+            error_log('registrarCliente error: ' . $e->getMessage());
+            return ['ok' => false, 'message' => 'Error del servidor'];
         }
     }
 }
