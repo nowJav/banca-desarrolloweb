@@ -132,7 +132,7 @@ use App\core\Auth;
 
   <footer class="border-top mt-5 py-3 small text-muted">
     <div class="container d-flex justify-content-between">
-      <span>Sistema v<?= htmlspecialchars((string)(\App\config\App::env('APP_VERSION','0.1.0'))) ?></span>
+      <span>Sistema v<?= htmlspecialchars((string)(\App\config\App::env('APP_VERSION','1.0'))) ?> Desarrollo Web UMG</span>
       <span>Servidor: <?= htmlspecialchars(date('Y-m-d H:i:s')) ?></span>
     </div>
   </footer>

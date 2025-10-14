@@ -59,6 +59,12 @@
           <p class="card-text">Operaciones optimizadas y gráficos dinámicos para monitorear transacciones diarias.</p>
         </div></div>
       </div>
+      <div class="p-4 p-md-5 mb-4 text-bg-dark rounded">
+        <div class="col-md-8 px-0">
+          <h1 class="display-6">Ingenieria en Sistemas</h1>
+          <p class="lead my-3"> Datos: Oscar Javier Morales Solórzano   Carné: 0900-20-19624</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
