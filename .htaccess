@@ -1,0 +1,17 @@
+<IfModule mod_rewrite.c>
+  Options -Indexes
+  RewriteEngine On
+  RewriteBase /
+
+  # If the requested resource exists as a file or directory in root, serve it
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Map /assets/* to public/assets/*
+  RewriteRule ^assets/(.*)$ public/assets/$1 [L]
+
+  # Otherwise route everything to root index.php
+  RewriteRule ^ index.php [QSA,L]
+</IfModule>
+
