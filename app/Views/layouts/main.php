@@ -32,7 +32,17 @@ use App\core\Auth;
           elseif ($isCliente) { $badge = 'Cliente'; }
         ?>
         <ul class="navbar-nav me-auto">
-          <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
+          <?php
+            $home = '/';
+            if ($isAdmin) { $home = '/admin'; }
+            elseif ($isCajero) { $home = '/cajero'; }
+            elseif ($isCliente) { $home = '/cliente'; }
+          ?>
+          <?php if (empty($_SESSION['user_id'])): ?>
+            <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
+          <?php else: ?>
+            <li class="nav-item"><a class="nav-link" href="<?= htmlspecialchars($home) ?>">Inicio</a></li>
+          <?php endif; ?>
           <?php if ($isAdmin): ?>
             <li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
             <li class="nav-item"><a class="nav-link" href="/admin/cajeros">Cajeros</a></li>

@@ -1,7 +1,13 @@
-<section class="py-4 bg-light rounded">
+<section class="py-5 bg-light rounded">
   <div class="container">
-    <h1 class="h4 mb-3">Bienvenido</h1>
-    <p class="mb-4">Selecciona un acceso para continuar.</p>
+    <div class="p-4 p-md-5 mb-4 text-bg-dark rounded">
+      <div class="col-md-8 px-0">
+        <h1 class="display-6">Banca DesarrolloWeb</h1>
+        <p class="lead my-3">Soluciones bancarias simples: administra cuentas, realiza depósitos y transferencias con seguridad.</p>
+        <p class="lead mb-0"><a href="/login" class="text-white fw-bold">Comenzar ahora</a></p>
+      </div>
+    </div>
+    <h2 class="h5 mb-3">Accesos rápidos</h2>
     <div class="row g-3 row-cols-1 row-cols-md-2 row-cols-lg-4">
       <div class="col">
         <div class="card h-100">
@@ -40,9 +46,19 @@
         </div>
       </div>
     </div>
-    <div class="alert alert-info mt-4" role="alert">
-      Seguridad: Usa contraseñas seguras y no compartas tus credenciales. Acciones sensibles pueden requerir confirmación.
+    <div class="row mt-4 g-3">
+      <div class="col-md-6">
+        <div class="card h-100"><div class="card-body">
+          <h5 class="card-title">Seguridad</h5>
+          <p class="card-text">Contraseñas seguras, CSRF en formularios y auditoría de eventos sensibles para proteger tu cuenta.</p>
+        </div></div>
+      </div>
+      <div class="col-md-6">
+        <div class="card h-100"><div class="card-body">
+          <h5 class="card-title">Rendimiento</h5>
+          <p class="card-text">Operaciones optimizadas y gráficos dinámicos para monitorear transacciones diarias.</p>
+        </div></div>
+      </div>
     </div>
   </div>
 </section>
-

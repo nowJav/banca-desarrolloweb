@@ -124,4 +124,12 @@ class Cuenta extends Model
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return isset($row['saldo']) ? (float)$row['saldo'] : null;
     }
+
+    public function datosPorNumero(string $numeroCuenta): ?array
+    {
+        $stmt = $this->db->prepare('SELECT id, saldo, estado FROM cuentas WHERE numero_cuenta = :num LIMIT 1');
+        $stmt->execute([':num' => $numeroCuenta]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ?: null;
+    }
 }

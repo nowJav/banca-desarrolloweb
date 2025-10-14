@@ -87,12 +87,14 @@ class CajeroController extends Controller
             return;
         }
         $cuentaModel = new \App\models\Cuenta();
-        $saldoAntes = $cuentaModel->saldoPorNumero($numero);
-        if ($saldoAntes === null) { $this->setFlash('error','Cuenta no existe o no activa.'); header('Location:/cajero/deposito'); return; }
+        $datos = $cuentaModel->datosPorNumero($numero);
+        if ($datos === null) { $this->setFlash('error','Cuenta no existe.'); header('Location:/cajero/deposito'); return; }
+        if (($datos['estado'] ?? '') !== 'activa') { $this->setFlash('warning','Cuenta no activa.'); header('Location:/cajero/deposito'); return; }
+        $saldoAntes = (float)$datos['saldo'];
         $uid = (int)($_SESSION['user_id'] ?? 0);
         $res = (new Movimiento())->depositoCajero($numero, $monto, $uid, $glosa);
         if ($res['ok'] ?? false) {
-            $saldoDespues = $cuentaModel->saldoPorNumero($numero);
+            $saldoDespues = (float)$cuentaModel->saldoPorNumero($numero);
             (new AuditoriaService())->registrar('deposito', 'cuenta', $numero);
             $this->setFlash('success', 'Depósito registrado.');
             $this->render('cajero/deposito', ['numero' => $numero, 'saldo_antes' => $saldoAntes, 'saldo_despues' => $saldoDespues]);
@@ -124,8 +126,10 @@ class CajeroController extends Controller
             return;
         }
         $cuentaModel = new \App\models\Cuenta();
-        $saldoAntes = $cuentaModel->saldoPorNumero($numero);
-        if ($saldoAntes === null) { $this->setFlash('warning','Cuenta no activa.'); header('Location:/cajero/retiro'); return; }
+        $datos = $cuentaModel->datosPorNumero($numero);
+        if ($datos === null) { $this->setFlash('error','Cuenta no existe.'); header('Location:/cajero/retiro'); return; }
+        if (($datos['estado'] ?? '') !== 'activa') { $this->setFlash('warning','Cuenta no activa.'); header('Location:/cajero/retiro'); return; }
+        $saldoAntes = (float)$datos['saldo'];
         if ($saldoAntes < $monto) { $this->setFlash('danger','Saldo insuficiente.'); header('Location:/cajero/retiro'); return; }
         $uid = (int)($_SESSION['user_id'] ?? 0);
         $res = (new Movimiento())->retiroCajero($numero, $monto, $uid, $glosa);

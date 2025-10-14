@@ -19,15 +19,9 @@ class Usuario extends Model
                 ':email' => $email,
                 ':password_hash' => $passwordHash,
             ]);
-
-            $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
-            // Intents: SP might return first row with status/message/id
-            $ok = (bool)($row['ok'] ?? $row['success'] ?? $row['estado'] ?? ($row ? true : false));
-            $message = (string)($row['message'] ?? $row['mensaje'] ?? ($ok ? 'Registro exitoso' : 'Error en registro'));
-            $id = $row['id'] ?? $row['cliente_id'] ?? null;
-            // Ensure cursor closed to allow next queries
+            // Este SP no retorna fila; si no lanzó excepción, consideramos éxito
             while ($stmt->nextRowset()) { /* flush */ }
-            return ['ok' => $ok, 'message' => $message, 'id' => $id];
+            return ['ok' => true, 'message' => 'Registro exitoso'];
         } catch (PDOException $e) {
             error_log('registrarCliente error: ' . $e->getMessage());
             return ['ok' => false, 'message' => 'Error del servidor'];
